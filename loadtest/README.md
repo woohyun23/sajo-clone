@@ -6,6 +6,9 @@
 - 백테스트 동기·비동기 비교: `backtest-async-performance.jmx`
   - 실행 방법과 해석 기준: `backtest/README.md`
   - 결과 기록 양식: `backtest/result-summary.md`
+- Redis Lua Signal 중복 차단 전후 비교: `strategy-redis-performance.jmx`
+  - 실행 방법과 해석 기준: `strategy-redis/README.md`
+  - 결과 기록 양식: `strategy-redis/result-summary.md`
 
 ## 현재가 조회 API 부하 테스트 (#259)
 
