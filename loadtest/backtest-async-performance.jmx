@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Backtest Async Performance" enabled="true">
+      <stringProp name="TestPlan.comments">백테스트 동기/비동기 실행 전후의 생성 API 응답시간과 COMPLETED까지의 전체 시간을 분리해 측정한다.</stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="BASE_URL" elementType="Argument">
+            <stringProp name="Argument.name">BASE_URL</stringProp>
+            <stringProp name="Argument.value">${__P(BASE_URL,localhost)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="BASE_PORT" elementType="Argument">
+            <stringProp name="Argument.name">BASE_PORT</stringProp>
+            <stringProp name="Argument.value">${__P(BASE_PORT,8082)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="USER_ID" elementType="Argument">
+            <stringProp name="Argument.name">USER_ID</stringProp>
+            <stringProp name="Argument.value">${__P(USER_ID,)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="STRATEGY_ID" elementType="Argument">
+            <stringProp name="Argument.name">STRATEGY_ID</stringProp>
+            <stringProp name="Argument.value">${__P(STRATEGY_ID,)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="START_DATE" elementType="Argument">
+            <stringProp name="Argument.name">START_DATE</stringProp>
+            <stringProp name="Argument.value">${__P(START_DATE,2026-09-11)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="END_DATE" elementType="Argument">
+            <stringProp name="Argument.name">END_DATE</stringProp>
+            <stringProp name="Argument.value">${__P(END_DATE,2026-09-25)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="INITIAL_CASH" elementType="Argument">
+            <stringProp name="Argument.name">INITIAL_CASH</stringProp>
+            <stringProp name="Argument.value">${__P(INITIAL_CASH,10000000)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="POLL_INTERVAL_MS" elementType="Argument">
+            <stringProp name="Argument.name">POLL_INTERVAL_MS</stringProp>
+            <stringProp name="Argument.value">${__P(POLL_INTERVAL_MS,250)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="MAX_POLLS" elementType="Argument">
+            <stringProp name="Argument.name">MAX_POLLS</stringProp>
+            <stringProp name="Argument.value">${__P(MAX_POLLS,240)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Backtest Load" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">${__P(LOOPS,1)}</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(THREADS,10)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__P(RAMP_UP,10)}</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Backtest Request Headers" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Content-Type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">X-User-Id</stringProp>
+              <stringProp name="Header.value">${USER_ID}</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Backtest End-to-End Completion" enabled="true">
+          <boolProp name="TransactionController.includeTimers">true</boolProp>
+          <boolProp name="TransactionController.parent">true</boolProp>
+        </TransactionController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST Backtest Create" enabled="true">
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{&quot;startDate&quot;:&quot;${START_DATE}&quot;,&quot;endDate&quot;:&quot;${END_DATE}&quot;,&quot;initialCash&quot;:${INITIAL_CASH}}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
+            <stringProp name="HTTPSampler.port">${BASE_PORT}</stringProp>
+            <stringProp name="HTTPSampler.protocol">http</stringProp>
+            <stringProp name="HTTPSampler.path">/api/v1/strategies/${STRATEGY_ID}/backtests</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.connect_timeout">${__P(CONNECT_TIMEOUT_MS,3000)}</stringProp>
+            <stringProp name="HTTPSampler.response_timeout">${__P(RESPONSE_TIMEOUT_MS,120000)}</stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Initialize Backtest Variables" enabled="true">
+              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="script">vars.put('backtestId', 'NOT_FOUND')
+vars.put('backtestStatus', 'UNKNOWN')
+vars.put('pollCount', '0')
+vars.put('requestStartedAtMillis', String.valueOf(System.currentTimeMillis()))</stringProp>
+              <stringProp name="scriptLanguage">groovy</stringProp>
+            </JSR223PreProcessor>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Create Returns 201" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49586">201</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.custom_message">백테스트 생성 API는 201을 반환해야 한다.</stringProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">8</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract Backtest ID and Status" enabled="true">
+              <stringProp name="JSONPostProcessor.referenceNames">backtestId;backtestStatus</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.data.backtestId;$.data.status</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers">1;1</stringProp>
+              <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND;UNKNOWN</stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+          </hashTree>
+          <WhileController guiclass="WhileControllerGui" testclass="WhileController" testname="Poll Until Terminal Status" enabled="true">
+            <stringProp name="WhileController.condition">${__groovy(def status = vars.get('backtestStatus'); def count = (vars.get('pollCount') ?: '0') as int; def max = (vars.get('MAX_POLLS') ?: '240') as int; return status != 'COMPLETED' &amp;&amp; status != 'FAILED' &amp;&amp; vars.get('backtestId') != 'NOT_FOUND' &amp;&amp; count &lt; max,)}</stringProp>
+          </WhileController>
+          <hashTree>
+            <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Polling Interval" enabled="true">
+              <stringProp name="ConstantTimer.delay">${POLL_INTERVAL_MS}</stringProp>
+            </ConstantTimer>
+            <hashTree/>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET Backtest Status" enabled="true">
+              <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments"/>
+              </elementProp>
+              <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
+              <stringProp name="HTTPSampler.port">${BASE_PORT}</stringProp>
+              <stringProp name="HTTPSampler.protocol">http</stringProp>
+              <stringProp name="HTTPSampler.path">/api/v1/strategies/${STRATEGY_ID}/backtests/${backtestId}/status</stringProp>
+              <stringProp name="HTTPSampler.method">GET</stringProp>
+              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+              <stringProp name="HTTPSampler.connect_timeout">${__P(CONNECT_TIMEOUT_MS,3000)}</stringProp>
+              <stringProp name="HTTPSampler.response_timeout">${__P(STATUS_TIMEOUT_MS,5000)}</stringProp>
+            </HTTPSamplerProxy>
+            <hashTree>
+              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Status Returns 200" enabled="true">
+                <collectionProp name="Asserion.test_strings">
+                  <stringProp name="49586">200</stringProp>
+                </collectionProp>
+                <stringProp name="Assertion.custom_message">백테스트 상태 조회 API는 200을 반환해야 한다.</stringProp>
+                <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+                <boolProp name="Assertion.assume_success">false</boolProp>
+                <intProp name="Assertion.test_type">8</intProp>
+              </ResponseAssertion>
+              <hashTree/>
+              <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract Backtest Status" enabled="true">
+                <stringProp name="JSONPostProcessor.referenceNames">backtestStatus</stringProp>
+                <stringProp name="JSONPostProcessor.jsonPathExprs">$.data.status</stringProp>
+                <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
+                <stringProp name="JSONPostProcessor.defaultValues">UNKNOWN</stringProp>
+              </JSONPostProcessor>
+              <hashTree/>
+              <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Increment Poll Count" enabled="true">
+                <stringProp name="cacheKey">true</stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="script">def count = (vars.get('pollCount') ?: '0') as int
+vars.put('pollCount', String.valueOf(count + 1))</stringProp>
+                <stringProp name="scriptLanguage">groovy</stringProp>
+              </JSR223PostProcessor>
+              <hashTree/>
+            </hashTree>
+          </hashTree>
+          <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Backtest Completion Result" enabled="true">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">def status = vars.get('backtestStatus') ?: 'UNKNOWN'
+def startedAt = (vars.get('requestStartedAtMillis') ?: String.valueOf(System.currentTimeMillis())) as long
+def durationMs = System.currentTimeMillis() - startedAt
+SampleResult.setDataType(org.apache.jmeter.samplers.SampleResult.TEXT)
+SampleResult.setResponseData("backtestId=${vars.get('backtestId')}, status=${status}, durationMs=${durationMs}, polls=${vars.get('pollCount')}", 'UTF-8')
+if (status == 'COMPLETED') {
+    SampleResult.setResponseCode('200')
+    SampleResult.setResponseMessage('Backtest completed')
+    SampleResult.setSuccessful(true)
+} else if (status == 'FAILED') {
+    SampleResult.setResponseCode('500')
+    SampleResult.setResponseMessage('Backtest failed')
+    SampleResult.setSuccessful(false)
+} else {
+    SampleResult.setResponseCode('504')
+    SampleResult.setResponseMessage('Backtest did not reach a terminal status before polling limit')
+    SampleResult.setSuccessful(false)
+}</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223Sampler>
+          <hashTree/>
+        </hashTree>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>true</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>

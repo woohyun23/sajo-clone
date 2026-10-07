@@ -1,4 +1,13 @@
-# 현재가 조회 API 부하 테스트 (#259)
+# 부하 테스트
+
+## 시나리오
+
+- 현재가 조회: `quote-baseline.jmx`, `quote-synthetic.jmx`
+- 백테스트 동기·비동기 비교: `backtest-async-performance.jmx`
+  - 실행 방법과 해석 기준: `backtest/README.md`
+  - 결과 기록 양식: `backtest/result-summary.md`
+
+## 현재가 조회 API 부하 테스트 (#259)
 
 `GET /api/v1/market/quote` 베이스라인(개선 전) 부하 테스트 자료.
 
